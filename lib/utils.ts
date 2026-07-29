@@ -16,10 +16,11 @@ export function paiseToRupeeString(paise: number): string {
 
 export function rupeesToPaise(rupees: number | string): number {
   if (typeof rupees === "string") {
+    const isNegative = rupees.trim().startsWith("-");
     const cleaned = rupees.replace(/[^0-9.]/g, "");
     const parsed = parseFloat(cleaned);
-    if (isNaN(parsed) || parsed < 0) return 0;
-    return Math.round(parsed * 100);
+    if (isNaN(parsed)) return 0;
+    return Math.round((isNegative ? -parsed : parsed) * 100);
   }
   return Math.round(rupees * 100);
 }

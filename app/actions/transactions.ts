@@ -13,7 +13,7 @@ const transactionSchema = z.object({
   householdId: z.string().cuid(),
   type: z.enum(["INCOME", "EXPENSE", "TRANSFER"]),
   date: z.string().datetime({ offset: true }).or(z.string().date()),
-  amountInPaise: z.number().int().positive("Amount must be positive"),
+  amountInPaise: z.number().int().refine((v) => v !== 0, { message: "Amount cannot be zero" }),
   payee: z.string().max(200).optional(),
   notes: z.string().max(1000).optional(),
   envelopeId: z.string().cuid().optional().nullable(),

@@ -100,7 +100,9 @@ export function EditTransactionDialog({
   function validate() {
     const e: Record<string, string> = {};
     const paise = Math.round(parseFloat(amount) * 100);
-    if (!amount || isNaN(paise) || paise <= 0) e.amount = "Enter a valid positive amount";
+    if (!amount || isNaN(paise) || paise === 0) e.amount = "Enter a valid non-zero amount";
+    // INCOME and TRANSFER must be positive
+    if ((type === "INCOME" || type === "TRANSFER") && paise < 0) e.amount = "Amount must be positive for income and transfers";
 
     if (type === "EXPENSE") {
       if (!envelopeId) e.envelope = "Select an envelope";
@@ -274,7 +276,6 @@ export function EditTransactionDialog({
                   <Input
                     id="edit-tx-amount"
                     type="number"
-                    min="0"
                     step="0.01"
                     placeholder="0.00"
                     value={amount}
@@ -282,6 +283,11 @@ export function EditTransactionDialog({
                     className="pl-7"
                   />
                 </div>
+                {type === "EXPENSE" && (
+                  <p className="text-xs text-muted-foreground">
+                    Use a negative amount for a refund or credit.
+                  </p>
+                )}
                 {errors.amount && (
                   <p className="text-xs text-destructive">{errors.amount}</p>
                 )}

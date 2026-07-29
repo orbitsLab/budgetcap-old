@@ -278,12 +278,16 @@ export function TransactionsTable({
                       tx.type === "INCOME"
                         ? "text-positive"
                         : tx.type === "EXPENSE"
-                        ? "text-negative"
+                        // negative stored amount = refund → show green
+                        ? tx.amountInPaise < 0
+                          ? "text-positive"
+                          : "text-negative"
                         : "text-foreground"
                     )}
                   >
-                    {tx.type === "EXPENSE" ? "−" : "+"}
-                    {formatINR(tx.amountInPaise)}
+                    {tx.type === "INCOME" && "+"}
+                    {tx.type === "EXPENSE" && (tx.amountInPaise < 0 ? "+" : "−")}
+                    {formatINR(Math.abs(tx.amountInPaise))}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center justify-end gap-1">
@@ -347,12 +351,15 @@ export function TransactionsTable({
                       tx.type === "INCOME"
                         ? "text-positive"
                         : tx.type === "EXPENSE"
-                        ? "text-negative"
+                        ? tx.amountInPaise < 0
+                          ? "text-positive"
+                          : "text-negative"
                         : "text-foreground"
                     )}
                   >
-                    {tx.type === "EXPENSE" ? "−" : "+"}
-                    {formatINR(tx.amountInPaise)}
+                    {tx.type === "INCOME" && "+"}
+                    {tx.type === "EXPENSE" && (tx.amountInPaise < 0 ? "+" : "−")}
+                    {formatINR(Math.abs(tx.amountInPaise))}
                   </span>
                 </div>
                 
