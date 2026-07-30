@@ -196,6 +196,24 @@ export async function deleteTransaction(id: string): Promise<{ success: boolean 
   return { success: true };
 }
 
+export async function deleteMultipleTransactions(
+  ids: string[]
+): Promise<{ success: boolean; deleted: number }> {
+  await requireAuth();
+  if (!ids.length) return { success: true, deleted: 0 };
+
+  const { count } = await prisma.transaction.deleteMany({
+    where: { id: { in: ids } },
+  });
+
+  revalidateTag("household_transactions", "max");
+  revalidateTag("household_envelopes", "max");
+  revalidateTag("household_dashboard_summary", "max");
+  revalidatePath("/transactions");
+  revalidatePath("/budget");
+  return { success: true, deleted: count };
+}
+
 // ─────────────────────────────────────────────────────────
 // Fetch Transactions
 // ─────────────────────────────────────────────────────────
