@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-fallback-secret-at-least-32-chars-long-!!!";
+const JWT_SECRET = process.env.JWT_SECRET || process.env.AUTH_SECRET || "your-fallback-secret-at-least-32-chars-long-!!!";
 
 function base64urlEncode(str: string | Buffer): string {
   const buf = typeof str === "string" ? Buffer.from(str) : str;
